@@ -1,0 +1,8 @@
+universe = vanilla
+Executable = condor.sh
+transfer_input_files = Pion_gun_cfi_GEN_SIM.py
+should_transfer_files = YES 
+when_to_transfer_output = ON_EXIT
+x509userproxy = $ENV(X509_USER_PROXY)
+transfer_output_files = _condor_stderr
+
