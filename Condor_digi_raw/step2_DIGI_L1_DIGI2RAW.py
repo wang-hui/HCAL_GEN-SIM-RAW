@@ -2,12 +2,12 @@
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: TTbar_14TeV_TuneCP5_cfi --conditions auto:phase1_2021_realistic -n 10 --era Run3 --eventcontent FEVTDEBUG --relval 9000,100 -s GEN,SIM --datatier GEN-SIM --beamspot Run3RoundOptics25ns13TeVLowSigmaZ --geometry DB:Extended --fileout file:step1.root
+# with command line options: step2 --conditions auto:phase1_2021_realistic -s DIGI:pdigi_valid,L1,DIGI2RAW --datatier GEN-SIM-DIGI-RAW -n 10 --geometry DB:Extended --era Run3 --eventcontent FEVTDEBUGHLT --filein file:step1.root --fileout file:step2.root
 import FWCore.ParameterSet.Config as cms
 import sys
 from Configuration.Eras.Era_Run3_cff import Run3
 
-process = cms.Process('SIM',Run3)
+process = cms.Process('DIGI2RAW',Run3)
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -16,26 +16,47 @@ process.load('FWCore.MessageService.MessageLogger_cfi')
 process.load('Configuration.EventContent.EventContent_cff')
 process.load('SimGeneral.MixingModule.mixNoPU_cfi')
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
-process.load('Configuration.StandardSequences.GeometrySimDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
-process.load('Configuration.StandardSequences.Generator_cff')
-process.load('IOMC.EventVertexGenerators.VtxSmearedRun3RoundOptics25ns13TeVLowSigmaZ_cfi')
-process.load('GeneratorInterface.Core.genFilterSummary_cff')
-process.load('Configuration.StandardSequences.SimIdeal_cff')
+process.load('Configuration.StandardSequences.Digi_cff')
+process.load('Configuration.StandardSequences.SimL1Emulator_cff')
+process.load('Configuration.StandardSequences.DigiToRaw_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(1000),
+    input = cms.untracked.int32(-1),
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
 )
 
-RNG_seed = int(sys.argv[2]) + 1 #RNG seed needs to be a positive int
-print "RNG seed = ", RNG_seed
-process.RandomNumberGeneratorService.generator.initialSeed = RNG_seed
+f=open(sys.argv[2], "r")
+my_list = f.readlines()
+f.close()
 
 # Input source
-process.source = cms.Source("EmptySource")
+process.source = cms.Source("PoolSource",
+    dropDescendantsOfDroppedBranches = cms.untracked.bool(False),
+    fileNames = cms.untracked.vstring(my_list),
+    inputCommands = cms.untracked.vstring(
+        'keep *', 
+        'drop *_genParticles_*_*', 
+        'drop *_genParticlesForJets_*_*', 
+        'drop *_kt4GenJets_*_*', 
+        'drop *_kt6GenJets_*_*', 
+        'drop *_iterativeCone5GenJets_*_*', 
+        'drop *_ak4GenJets_*_*', 
+        'drop *_ak7GenJets_*_*', 
+        'drop *_ak8GenJets_*_*', 
+        'drop *_ak4GenJetsNoNu_*_*', 
+        'drop *_ak8GenJetsNoNu_*_*', 
+        'drop *_genCandidatesForMET_*_*', 
+        'drop *_genParticlesForMETAllVisible_*_*', 
+        'drop *_genMetCalo_*_*', 
+        'drop *_genMetCaloAndNonPrompt_*_*', 
+        'drop *_genMetTrue_*_*', 
+        'drop *_genMetIC5GenJs_*_*'
+    ),
+    secondaryFileNames = cms.untracked.vstring()
+)
 
 process.options = cms.untracked.PSet(
     FailPath = cms.untracked.vstring(),
@@ -66,69 +87,41 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('TTbar_14TeV_TuneCP5_cfi nevts:10'),
+    annotation = cms.untracked.string('step2 nevts:10'),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('$Revision: 1.19 $')
 )
 
 # Output definition
 
-process.FEVTDEBUGoutput = cms.OutputModule("PoolOutputModule",
-    SelectEvents = cms.untracked.PSet(
-        SelectEvents = cms.vstring('generation_step')
-    ),
+process.FEVTDEBUGHLToutput = cms.OutputModule("PoolOutputModule",
     dataset = cms.untracked.PSet(
-        dataTier = cms.untracked.string('GEN-SIM'),
+        dataTier = cms.untracked.string('GEN-SIM-DIGI-RAW'),
         filterName = cms.untracked.string('')
     ),
-    fileName = cms.untracked.string('file:step1.root'),
-    outputCommands = process.FEVTDEBUGEventContent.outputCommands,
+    fileName = cms.untracked.string('file:step2.root'),
+    outputCommands = process.FEVTDEBUGHLTEventContent.outputCommands,
     splitLevel = cms.untracked.int32(0)
 )
 
 # Additional output definition
 
 # Other statements
-process.XMLFromDBSource.label = cms.string("Extended")
-process.genstepfilter.triggerConditions=cms.vstring("generation_step")
+process.mix.digitizers = cms.PSet(process.theDigitizersValid)
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2021_realistic', '')
 
-process.generator = cms.EDFilter("Pythia8PtGun",
-    PGunParameters = cms.PSet(
-        AddAntiParticle = cms.bool(True),
-        MaxEta = cms.double(2.5),
-        MaxPhi = cms.double(3.14159265359),
-        MaxPt = cms.double(1000.1),
-        MinEta = cms.double(-2.5),
-        MinPhi = cms.double(-3.14159265359),
-        MinPt = cms.double(999.9),
-        ParticleID = cms.vint32(211) # change to pion
-    ),
-    PythiaParameters = cms.PSet(
-        parameterSets = cms.vstring()
-    ),
-    Verbosity = cms.untracked.int32(0),
-    firstRun = cms.untracked.uint32(1),
-    psethack = cms.string('1TeV pion +- gun')
-)
-
-process.ProductionFilterSequence = cms.Sequence(process.generator)
-
 # Path and EndPath definitions
-process.generation_step = cms.Path(process.pgen)
-process.simulation_step = cms.Path(process.psim)
-process.genfiltersummary_step = cms.EndPath(process.genFilterSummary)
+process.digitisation_step = cms.Path(process.pdigi_valid)
+process.L1simulation_step = cms.Path(process.SimL1Emulator)
+process.digi2raw_step = cms.Path(process.DigiToRaw)
 process.endjob_step = cms.EndPath(process.endOfProcess)
-process.FEVTDEBUGoutput_step = cms.EndPath(process.FEVTDEBUGoutput)
+process.FEVTDEBUGHLToutput_step = cms.EndPath(process.FEVTDEBUGHLToutput)
 
 # Schedule definition
-process.schedule = cms.Schedule(process.generation_step,process.genfiltersummary_step,process.simulation_step,process.endjob_step,process.FEVTDEBUGoutput_step)
+process.schedule = cms.Schedule(process.digitisation_step,process.L1simulation_step,process.digi2raw_step,process.endjob_step,process.FEVTDEBUGHLToutput_step)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
-# filter all path with the production filter sequence
-for path in process.paths:
-	getattr(process,path).insert(0, process.ProductionFilterSequence)
 
 
 # Customisation from command line

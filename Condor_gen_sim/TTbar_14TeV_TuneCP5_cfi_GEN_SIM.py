@@ -30,7 +30,7 @@ process.maxEvents = cms.untracked.PSet(
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
 )
 
-RNG_seed = int(sys.argv[2])
+RNG_seed = int(sys.argv[2]) + 1 #RNG seed needs to be a positive int
 print "RNG seed = ", RNG_seed
 process.RandomNumberGeneratorService.generator.initialSeed = RNG_seed
 
