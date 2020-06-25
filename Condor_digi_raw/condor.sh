@@ -13,7 +13,8 @@ tar -xvf FileList.tar
 pwd
 
 cmsRun step2_DIGI_L1_DIGI2RAW.py $1
-cmsRun step2_DIGI_L1_DIGI2RAW_PU.py $1
-
 xrdcp step2.root root://cmseos.fnal.gov//${2}/Run3_RelVal_1TeV_pion_gun_RAW_${3}.root
+rm step2.root
+
+cmsRun step2_DIGI_L1_DIGI2RAW_PU.py $1
 xrdcp step2_PU.root root://cmseos.fnal.gov//${2}/Run3_RelVal_1TeV_pion_gun_RAW_PU65_${3}.root
