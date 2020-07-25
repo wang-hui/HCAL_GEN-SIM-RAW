@@ -1,9 +1,11 @@
 # HCAL GEN-SIM-RAW ntuple production  
 
-1. setup CMSSW. Latest Run3 RelVal samples are produced with CMSSW_11_1_0_pre8  
+This is the branch for 2018 GEN-SIM-RAW production. For Run3 production, please go to the CMSSW_11_1_x branch  
+
+1. setup CMSSW.  
 ```
-cmsrel CMSSW_11_1_0_pre8
-cd CMSSW_11_1_0_pre8/src
+cmsrel CMSSW_10_2_12_patch1
+cd CMSSW_10_2_12_patch1/src
 cmsenv
 ```
 

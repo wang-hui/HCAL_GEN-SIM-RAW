@@ -2,8 +2,8 @@ import os
 from shutil import copyfile
 from datetime import date
 
-folder_name = "Run3_RelVal_1TeV_pion_gun_RAW"
-file_list = "../FileList/Run3_RelVal_1TeV_pion_gun_GEN_SIM_test.list"
+folder_name = "2018_1TeV_pion_gun_RAW"
+file_list = "../2018_1TeV_pion_gun_GEN_SIM_test.list"
 
 result_path = "/eos/uscms/store/user/huiwang/HCAL/"
 condor_path = "/uscms_data/d3/huiwang/condor_temp/huiwang/HCAL/"
