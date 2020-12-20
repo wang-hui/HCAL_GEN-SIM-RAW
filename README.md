@@ -9,7 +9,7 @@ cmsenv
 
 2. checkout this repo
 ```
-git clone https://github.com/wang-hui/HCAL_GEN-SIM-RAW.git
+git clone -b CMSSW_11_1_x https://github.com/wang-hui/HCAL_GEN-SIM-RAW.git
 cd HCAL_GEN-SIM-RAW
 ```
 
