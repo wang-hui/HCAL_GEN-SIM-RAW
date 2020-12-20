@@ -1,2 +1,10 @@
 *.root
-*.std*
+__init__.py
+*.pyc
+*.txt
+*.csv
+*.tar
+*.stdout
+*.stderr
+plots*/
+results*/
