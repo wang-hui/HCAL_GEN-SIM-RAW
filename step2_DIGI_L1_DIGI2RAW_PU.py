@@ -24,13 +24,16 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(100)
 )
 
 # Input source
 process.source = cms.Source("PoolSource",
     dropDescendantsOfDroppedBranches = cms.untracked.bool(False),
-    fileNames = cms.untracked.vstring('file:step1.root'),
+    fileNames = cms.untracked.vstring(
+        #'file:step1.root'
+        "/store/mc/RunIIFall18GS/DoublePion_E-50/GEN-SIM/102X_upgrade2018_realistic_v11-v2/110000/B8DFF828-E6DB-214E-B8E5-ABB641948CD8.root"
+    ),
     inputCommands = cms.untracked.vstring(
         'keep *', 
         'drop *_genParticles_*_*', 

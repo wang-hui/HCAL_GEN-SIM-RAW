@@ -7,4 +7,3 @@ x509userproxy = $ENV(X509_USER_PROXY)
 transfer_output_files = _condor_stderr
 
 request_memory = 4000
-request_disk = 60000000
