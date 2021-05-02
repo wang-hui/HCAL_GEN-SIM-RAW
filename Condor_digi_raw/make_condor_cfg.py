@@ -2,11 +2,10 @@ import os
 from shutil import copyfile
 from datetime import date
 
-folder_name = "UL_1TeV_pion_gun_RAW_PU"
-file_list = "../FileList/UL_1TeV_pion_gun_GEN_SIM_test.list"
-
+folder_name = "RSGravitonToQuarkQuark_kMpl01_M_2000_RAW_PU"
 result_path = "/eos/uscms/store/user/lpcrutgers/huiwang/HCAL/"
 condor_path = "/uscms_data/d3/huiwang/condor_temp/huiwang/HCAL/"
+file_list = "../FileList/RSGravitonToQuarkQuark_kMpl01_M_2000_FNAL.list"
 tot_jobs = 100
 
 today = str(date.today())

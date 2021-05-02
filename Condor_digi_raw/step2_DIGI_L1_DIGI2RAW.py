@@ -23,24 +23,18 @@ process.load('Configuration.StandardSequences.DigiToRaw_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
-tot_events = 1000
-
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(tot_events)
+    input = cms.untracked.int32(-1)
 )
 
 f=open(sys.argv[2], "r")
 my_list = f.readlines()
 f.close()
 
-skip_events = tot_events * int(sys.argv[3])
-print "skip first", skip_events, "events"
-
 # Input source
 process.source = cms.Source("PoolSource",
     dropDescendantsOfDroppedBranches = cms.untracked.bool(False),
     fileNames = cms.untracked.vstring(my_list),
-    skipEvents = cms.untracked.uint32(skip_events),
     inputCommands = cms.untracked.vstring(
         'keep *', 
         'drop *_genParticles_*_*', 

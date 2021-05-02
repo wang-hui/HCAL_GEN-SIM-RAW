@@ -32,7 +32,9 @@ process.source = cms.Source("PoolSource",
     dropDescendantsOfDroppedBranches = cms.untracked.bool(False),
     fileNames = cms.untracked.vstring(
         #'file:step1.root'
-        "/store/mc/RunIIFall18GS/DoublePion_E-50/GEN-SIM/102X_upgrade2018_realistic_v11-v2/110000/B8DFF828-E6DB-214E-B8E5-ABB641948CD8.root"
+        #"/store/mc/RunIIFall18GS/DoublePion_E-50/GEN-SIM/102X_upgrade2018_realistic_v11-v2/110000/B8DFF828-E6DB-214E-B8E5-ABB641948CD8.root"
+        #"/store/mc/RunIIFall18GS/GluinoGluinoToNeutralinoNeutralinoTo2T2B2S_M-2000_CTau-10000mm_TuneCP2_13TeV-pythia8/GEN-SIM/102X_upgrade2018_realistic_v11-v2/20000/2660F22C-FE78-B041-800D-164C51B56358.root"
+        "/store/mc/RunIIFall18GS/RSGravitonToQuarkQuark_kMpl01_M_2000_TuneCP5_13TeV_pythia8/GEN-SIM/102X_upgrade2018_realistic_v11-v1/240000/0369793F-845A-DA41-81A6-BA137293C621.root"
     ),
     inputCommands = cms.untracked.vstring(
         'keep *', 

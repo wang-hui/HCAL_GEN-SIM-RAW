@@ -12,9 +12,9 @@ cd ${_CONDOR_SCRATCH_DIR}
 tar -xvf FileList.tar
 pwd
 
-#cmsRun step2_DIGI_L1_DIGI2RAW.py $1
-#xrdcp step2.root root://cmseos.fnal.gov//${2}/UL_MC_RAW_noPU_${3}.root
-#rm step2.root
+cmsRun step2_DIGI_L1_DIGI2RAW.py $1 $4
+xrdcp step2.root root://cmseos.fnal.gov//${2}/UL_LLP_noPU_RAW_${3}_${4}.root
+rm step2.root
 
-cmsRun step2_DIGI_L1_DIGI2RAW_PU.py $1
-xrdcp step2_PU.root root://cmseos.fnal.gov//${2}/UL_MC_RAW_PU_${3}.root
+cmsRun step2_DIGI_L1_DIGI2RAW_PU.py $1 $4
+xrdcp step2_PU.root root://cmseos.fnal.gov//${2}/UL_1TeV_pion_gun_RAW_PU_${3}_${4}.root
