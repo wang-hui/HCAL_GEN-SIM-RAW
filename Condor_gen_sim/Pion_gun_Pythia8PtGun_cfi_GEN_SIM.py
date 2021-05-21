@@ -4,7 +4,7 @@
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
 # with command line options: TTbar_14TeV_TuneCP5_cfi --conditions auto:phase1_2021_realistic -n 10 --era Run3 --eventcontent FEVTDEBUG --relval 9000,100 -s GEN,SIM --datatier GEN-SIM --beamspot Run3RoundOptics25ns13TeVLowSigmaZ --geometry DB:Extended --fileout file:step1.root
 import FWCore.ParameterSet.Config as cms
-
+import sys
 from Configuration.StandardSequences.Eras import eras
 
 process = cms.Process('SIM',eras.Run2_2018)
@@ -29,14 +29,16 @@ process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(1000)
 )
 
-process.RandomNumberGeneratorService.generator.initialSeed = 666
+RNG_seed = int(sys.argv[2]) + 1 #RNG seed needs to be a positive int
+print "RNG seed = ", RNG_seed
+process.RandomNumberGeneratorService.generator.initialSeed = RNG_seed
 
 # Input source
 process.source = cms.Source("EmptySource")
 
 process.options = cms.untracked.PSet(
     numberOfStreams = cms.untracked.uint32(0),
-    numberOfThreads = cms.untracked.uint32(4),
+    numberOfThreads = cms.untracked.uint32(1),
 )
 
 # Production Info
@@ -72,10 +74,10 @@ process.GlobalTag = GlobalTag(process.GlobalTag, '106X_upgrade2018_realistic_v11
 process.generator = cms.EDFilter("Pythia8PtGun",
     PGunParameters = cms.PSet(
         AddAntiParticle = cms.bool(True),
-        MaxEta = cms.double(2.5),
+        MaxEta = cms.double(3.1),
         MaxPhi = cms.double(3.14159265359),
         MaxPt = cms.double(1000.1),
-        MinEta = cms.double(-2.5),
+        MinEta = cms.double(-3.1),
         MinPhi = cms.double(-3.14159265359),
         MinPt = cms.double(999.9),
         ParticleID = cms.vint32(211) # change to pion

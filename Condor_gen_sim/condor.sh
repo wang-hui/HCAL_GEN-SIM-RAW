@@ -10,6 +10,6 @@ cd CMSSW_10_6_12/src
 eval `scramv1 runtime -sh`
 cd ${_CONDOR_SCRATCH_DIR}
 
-cmsRun Pion_gun_cfi_GEN_SIM.py $1
+cmsRun Pion_gun_FlatRandomEGunProducer_cfi_GEN_SIM.py $1
 
 xrdcp step1.root root://cmseos.fnal.gov//${2}/UL_1TeV_pion_gun_GEN_SIM_${1}.root
