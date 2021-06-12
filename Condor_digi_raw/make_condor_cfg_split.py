@@ -2,13 +2,13 @@ import os
 from shutil import copyfile
 from datetime import date
 
-folder_name = "UL_DoublePion_E-50_RAW_PU"
+folder_name = "UL_DYJetsToEE_M-50_RAW_PU"
 result_path = "/eos/uscms/store/user/lpcrutgers/huiwang/HCAL/"
 condor_path = "/uscms_data/d3/huiwang/condor_temp/huiwang/HCAL/"
-file_list = "../FileList/2018_DoublePion_E-50_GEN-SIM.list"
+file_list = "../FileList/DYJetsToEE_M-50_GEN-SIM_FNAL_g10k.list"
 
 tot_jobs = 100
-job_split = 50
+job_split = 10
 
 today = str(date.today())
 folder_name_full = folder_name + "-" + today
@@ -53,7 +53,7 @@ os.system("mkdir -p FileList_test")
 os.system("rm FileList_test/*.list")
 os.system("mv FileList_*.list FileList_test")
 
-copyfile("condor_submit.back", "condor_submit.txt")
+copyfile("condor_submit_split.back", "condor_submit.txt")
 f = open("condor_submit.txt", "a")
 f.write(header)
 f.close()

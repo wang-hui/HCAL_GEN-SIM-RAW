@@ -24,10 +24,11 @@ process.load('Configuration.StandardSequences.DigiToRaw_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
-tot_events = 1000
+tot_events = 1100
 
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(tot_events)
+    #input = cms.untracked.int32(10)
 )
 
 f=open(sys.argv[2], "r")
@@ -93,7 +94,7 @@ process.RAWSIMoutput = cms.OutputModule("PoolOutputModule",
 # Additional output definition
 
 # Other statements
-f=open("FileList/UL_MinBias_disk.list", "r")
+f=open("UL_MinBias_disk.list", "r")
 PU_files = f.readlines()
 f.close()
 PU_file = random.choice(PU_files)
