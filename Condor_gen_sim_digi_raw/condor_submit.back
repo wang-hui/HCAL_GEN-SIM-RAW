@@ -1,9 +1,10 @@
 universe = vanilla
 Executable = condor.sh
-transfer_input_files = condor.sh, step2_DIGI_L1_DIGI2RAW.py, step2_DIGI_L1_DIGI2RAW_PU.py, FileList.tar, UL_MinBias_disk.list 
+transfer_input_files = NuGun_GENToHLT_2018_cfg.py, QCD_GENToHLT_2018_cfg.py, UL_Neutrino_E-10_gun_disk.list
 should_transfer_files = YES 
 when_to_transfer_output = ON_EXIT
 x509userproxy = $ENV(X509_USER_PROXY)
 transfer_output_files = ""
 
-request_memory = 4000
+request_cpus = 2
+request_memory = 5000
