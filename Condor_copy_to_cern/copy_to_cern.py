@@ -5,6 +5,7 @@ LXPLUS = "eoscms.cern.ch"
 
 folder = "UL_Single_Pion_gun_E_2to200_noPU_RECO_simHits_fix_HB-2022-02-28/"
 FNAL_path = "/eos/uscms/store/user/lpcrutgers/huiwang/HCAL/" + folder
+
 LXPLUS_path = "/eos/cms/store/group/dpg_hcal/comm_hcal/Rutgers/" + folder
 
 f=open(sys.argv[1], "r")
