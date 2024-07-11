@@ -2,11 +2,10 @@
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: step2 --filein file:step1.root --fileout file:step2_PU.root --pileup_input dbs:/MinBias_TuneCP1_13TeV-pythia8/RunIISummer19UL18SIM-106X_upgrade2018_realistic_v11_L1v1-v2/GEN-SIM --mc --eventcontent RAWSIM --pileup 2018_25ns_UltraLegacy_PoissonOOTPU --datatier GEN-SIM-DIGI-RAW --conditions 106X_upgrade2018_realistic_v11_L1v1 --step DIGI,L1,DIGI2RAW --nThreads 8 --geometry DB:Extended --era Run2_2018 --no_exec
+# with command line options: step2 --filein file:step1.root --fileout file:step2.root --mc --eventcontent RAWSIM --datatier GEN-SIM-DIGI-RAW --conditions 106X_upgrade2018_realistic_v11_L1v1 --step DIGI,L1,DIGI2RAW --nThreads 8 --geometry DB:Extended --era Run2_2018 --no_exec
 import FWCore.ParameterSet.Config as cms
 import sys
 from Configuration.Eras.Era_Run2_2018_cff import Run2_2018
-import random
 
 process = cms.Process('DIGI2RAW',Run2_2018)
 
@@ -15,7 +14,7 @@ process.load('Configuration.StandardSequences.Services_cff')
 process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.load('Configuration.EventContent.EventContent_cff')
-process.load('SimGeneral.MixingModule.mix_2018_25ns_UltraLegacy_PoissonOOTPU_cfi')
+process.load('SimGeneral.MixingModule.mixNoPU_cfi')
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.Digi_cff')
@@ -24,21 +23,24 @@ process.load('Configuration.StandardSequences.DigiToRaw_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
+tot_events = 1000
+
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(tot_events)
 )
 
 f=open(sys.argv[2], "r")
 my_list = f.readlines()
 f.close()
 
+skip_events = tot_events * int(sys.argv[3])
+print "skip first", skip_events, "events"
+
 # Input source
 process.source = cms.Source("PoolSource",
     dropDescendantsOfDroppedBranches = cms.untracked.bool(False),
-    fileNames = cms.untracked.vstring(
-        #'file:step1.root'
-        my_list
-    ),
+    fileNames = cms.untracked.vstring(my_list),
+    skipEvents = cms.untracked.uint32(skip_events),
     inputCommands = cms.untracked.vstring(
         'keep *', 
         'drop *_genParticles_*_*', 
@@ -82,7 +84,7 @@ process.RAWSIMoutput = cms.OutputModule("PoolOutputModule",
         filterName = cms.untracked.string('')
     ),
     eventAutoFlushCompressedSize = cms.untracked.int32(20971520),
-    fileName = cms.untracked.string('file:step2_PU.root'),
+    fileName = cms.untracked.string('file:step2.root'),
     outputCommands = process.RAWSIMEventContent.outputCommands,
     splitLevel = cms.untracked.int32(0)
 )
@@ -90,12 +92,6 @@ process.RAWSIMoutput = cms.OutputModule("PoolOutputModule",
 # Additional output definition
 
 # Other statements
-f=open("UL_MinBias_disk.list", "r")
-PU_files = f.readlines()
-f.close()
-PU_file = random.choice(PU_files)
-
-process.mix.input.fileNames = cms.untracked.vstring([PU_file])
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, '106X_upgrade2018_realistic_v11_L1v1', '')
 

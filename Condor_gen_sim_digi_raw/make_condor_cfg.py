@@ -2,7 +2,7 @@ import os
 from shutil import copyfile
 from datetime import date
 
-folder_name = "UL_p1TeV_pion_gun_GEN_SIM"
+folder_name = "UL_Neutrino_E-10_gun_GEN_SIM_DIGI_RAW_PU"
 result_path = "/eos/uscms/store/user/lpcrutgers/huiwang/HCAL/"
 condor_path = "/uscms_data/d3/huiwang/condor_temp/huiwang/HCAL/"
 tot_jobs = 100

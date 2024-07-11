@@ -5,11 +5,16 @@ echo "Running on: `uname -a`" #Condor job is running on this node
 source /cvmfs/cms.cern.ch/cmsset_default.sh  ## if a tcsh script, use .csh instead of .sh
 export SCRAM_ARCH=slc7_amd64_gcc700
 echo $SCRAM_ARCH
-eval `scramv1 project CMSSW_10_6_12`
+eval `scramv1 project CMSSW CMSSW_10_6_12`
 cd CMSSW_10_6_12/src
 eval `scramv1 runtime -sh`
 cd ${_CONDOR_SCRATCH_DIR}
+tar -xvf FileList.tar
+pwd
 
-cmsRun Pion_gun_FlatRandomEGunProducer_cfi_GEN_SIM.py $1
+#cmsRun step2_DIGI_L1_DIGI2RAW_split.py $1 $4
+#xrdcp step2.root root://cmseos.fnal.gov//${2}/UL_MC_RAW_noPU_${3}_${4}.root
+#rm step2.root
 
-xrdcp step1.root root://cmseos.fnal.gov//${2}/UL_1TeV_pion_gun_GEN_SIM_${1}.root
+cmsRun step2_DIGI_L1_DIGI2RAW_PU_split.py $1 $4
+xrdcp step2_PU.root root://cmseos.fnal.gov//${2}/UL_MC_RAW_PU_${3}_${4}.root

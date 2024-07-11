@@ -2,11 +2,13 @@ import os
 from shutil import copyfile
 from datetime import date
 
-folder_name = "UL_p1TeV_pion_gun_RAW_PU"
+folder_name = "UL_DYJetsToEE_M-50_RAW_PU"
 result_path = "/eos/uscms/store/user/lpcrutgers/huiwang/HCAL/"
 condor_path = "/uscms_data/d3/huiwang/condor_temp/huiwang/HCAL/"
-file_list = "../FileList/UL_p1TeV_pion_gun_GEN_SIM.list"
+file_list = "../FileList/DYJetsToEE_M-50_GEN-SIM_FNAL_g10k.list"
+
 tot_jobs = 100
+job_split = 10
 
 today = str(date.today())
 folder_name_full = folder_name + "-" + today
@@ -35,22 +37,23 @@ tot_lines = len(my_list)
 my_step = max(int(tot_lines / tot_jobs),1) #int returns floor
 list_of_sublist = []
 for i in xrange (0, tot_lines, my_step):
-	list_of_sublist.append(my_list[i : i + my_step])
+    list_of_sublist.append(my_list[i : i + my_step])
 
 for j in range (len(list_of_sublist)):
-	f = open("FileList_" + str(j) + ".list", "w")
-	for line in list_of_sublist[j]:
-		f.write(line)
-	f.close()
-	header = header + "\nArguments = FileList_" + str(j) + ".list " + result_path_full + "/ " + str(j)
-	header = header + "\nQueue"
+    f = open("FileList_" + str(j) + ".list", "w")
+    for line in list_of_sublist[j]:
+        f.write(line)
+    f.close()
+    for k in range (job_split):
+        header = header + "\nArguments = FileList_" + str(j) + ".list " + result_path_full + "/ " + str(j) + " " + str(k)
+        header = header + "\nQueue"
 
 os.system("tar -cf FileList.tar FileList_*.list")
 os.system("mkdir -p FileList_test")
 os.system("rm FileList_test/*.list")
 os.system("mv FileList_*.list FileList_test")
 
-copyfile("condor_submit.back", "condor_submit.txt")
+copyfile("condor_submit_split.back", "condor_submit.txt")
 f = open("condor_submit.txt", "a")
 f.write(header)
 f.close()

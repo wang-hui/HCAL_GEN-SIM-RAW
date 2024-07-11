@@ -69,15 +69,15 @@ process.FEVTDEBUGoutput = cms.OutputModule("PoolOutputModule",
 process.XMLFromDBSource.label = cms.string("Extended")
 process.genstepfilter.triggerConditions=cms.vstring("generation_step")
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '102X_upgrade2018_design_v9', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '106X_upgrade2018_realistic_v11_L1v1', '')
 
 process.generator = cms.EDFilter("Pythia8PtGun",
     PGunParameters = cms.PSet(
         AddAntiParticle = cms.bool(True),
-        MaxEta = cms.double(2.5),
+        MaxEta = cms.double(3.1),
         MaxPhi = cms.double(3.14159265359),
         MaxPt = cms.double(1000.1),
-        MinEta = cms.double(-2.5),
+        MinEta = cms.double(-3.1),
         MinPhi = cms.double(-3.14159265359),
         MinPt = cms.double(999.9),
         ParticleID = cms.vint32(211) # change to pion
